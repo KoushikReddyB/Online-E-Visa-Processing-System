@@ -31,8 +31,8 @@ app.get("/api/get",(req,res)=>{
 
 
 
-app.get("/airplane/api/get",(req,res)=>{
-    const sqlGet="select * from airplanes;"
+app.get("/visa/api/get",(req,res)=>{
+    const sqlGet="select * from visa;"
     db.query(sqlGet,(err,result)=>{
         if(err)
         res.send({err: err});
@@ -139,11 +139,11 @@ app.post('/api/post',(req,res)=>{
     })
 })
 
-app.post('/airplane/api/post',(req,res)=>{
+app.post('/visa/api/post',(req,res)=>{
 
-    const {airplane_id,max_seats}=req.body;
-    const sqlInsert='insert into airplane values (?,?)';
-    db.query(sqlInsert,[airplane_id,max_seats],(err,result)=>{
+    const {visa_id,max_seats}=req.body;
+    const sqlInsert='insert into visa values (?,?)';
+    db.query(sqlInsert,[visa_id,max_seats],(err,result)=>{
         if(err)
         res.send({err:err});
     })
@@ -163,9 +163,9 @@ app.post('/schedule/api/post',(req,res)=>{
 
 app.post('/flight/api/post',(req,res)=>{
 
-    const {flight_no,schedule_id,flightStatus_id,airplane_id}=req.body;
+    const {flight_no,schedule_id,flightStatus_id,visa_id}=req.body;
     const sqlInsert='insert into schedule values (?,?,?,?)';
-    db.query(sqlInsert,[flight_no,schedule_id,flightStatus_id,airplane_id],(err,result)=>{
+    db.query(sqlInsert,[flight_no,schedule_id,flightStatus_id,visa_id],(err,result)=>{
         if(err)
         res.send({err:err});
     })
@@ -181,9 +181,9 @@ app.delete('/api/remove/:id',(req,res)=>{
     })
 })
 
-app.delete('/airplane/api/remove/:id',(req,res)=>{
+app.delete('/visa/api/remove/:id',(req,res)=>{
     const {id}=req.params;
-    const sqlRemove='delete from airplane where airplane_id=?';
+    const sqlRemove='delete from visa where visa_id=?';
     db.query(sqlRemove,[id],(err,result)=>{
         if(err)
         res.send({err:err});
@@ -222,9 +222,9 @@ app.get("/api/get/:id",(req,res)=>{
     })
 })
 
-app.get("/airplane/api/get/:id",(req,res)=>{
+app.get("/visa/api/get/:id",(req,res)=>{
     const {id}=req.params;
-    const sqlGet="select * from airplane where airplane_id=?;"
+    const sqlGet="select * from visa where visa_id=?;"
     db.query(sqlGet,id,(err,result)=>{
         if(err)
         res.send({err: err});
@@ -329,11 +329,11 @@ app.put("/api/update/:id",(req,res)=>{
     })
 })
 
-app.put("/airplane/api/update/:id",(req,res)=>{
+app.put("/visa/api/update/:id",(req,res)=>{
     const {id}=req.params;
-    const {airplane_id,max_seats}=req.body;
-    const sqlUpdate="update airplane set airplane_id=?,max_seats=? where airplane_id=?";
-    db.query(sqlUpdate,[airplane_id,max_seats,id],(err,result)=>{
+    const {visa_id,max_seats}=req.body;
+    const sqlUpdate="update visa set visa_id=?,max_seats=? where visa_id=?";
+    db.query(sqlUpdate,[visa_id,max_seats,id],(err,result)=>{
         if(err)
         res.send({err: err});
         else
@@ -487,7 +487,7 @@ app.post("/AvailableFlights",(req,res)=>{
     console.log(returnDate);
     console.log(fares.slice(2,6));
 
-    const sqlGet="select f.flight_no,s.schedule_id,f.airplane_id,a.max_seats,s.departure_time, s.arrival_time, fs.status,f.fares from Flight f inner join schedule s on s.schedule_id=f.schedule_id inner join FlightStatus fs on fs.flightStatus_id=f.flightStatus_id inner join airplane a on a.airplane_id=f.airplane_id where s.departure_time like  ? and s.arrival_time like ? and f.fares=?;"
+    const sqlGet="select f.flight_no,s.schedule_id,f.visa_id,a.max_seats,s.departure_time, s.arrival_time, fs.status,f.fares from Flight f inner join schedule s on s.schedule_id=f.schedule_id inner join FlightStatus fs on fs.flightStatus_id=f.flightStatus_id inner join visa a on a.visa_id=f.visa_id where s.departure_time like  ? and s.arrival_time like ? and f.fares=?;"
     db.query(sqlGet,[departureDate+'%',returnDate+'%',fares.slice(2,6)],(err,result)=>{
         if(err)
         res.send({err: err});
