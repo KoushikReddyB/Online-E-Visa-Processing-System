@@ -3,69 +3,53 @@ import { useParams, useHistory, Link } from "react-router-dom";
 import "./styles/AddEdit.css";
 import Axios from "axios";
 import { toast } from "react-toastify";
+
 const initialState = {
   schedule_id: "",
   departure_time: "",
   arrival_time: "",
   duration_time: "",
 };
+
 const AddEditSchedule = () => {
   const [state, setState] = useState(initialState);
   const { schedule_id, departure_time, arrival_time, duration_time } = state;
-
   const history = useHistory();
-
   const { id } = useParams();
 
   useEffect(() => {
-    Axios.get(`http://localhost:5000/schedule/api/get/${id}`).then((resp) =>
-      setState({ ...resp.data[0] })
-    );
+    if (id) {
+      Axios.get(`http://localhost:5000/schedule/api/get/${id}`)
+        .then((response) => setState({ ...response.data[0] }))
+        .catch((error) => console.error(error));
+    }
   }, [id]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!schedule_id || !departure_time || !arrival_time || !duration_time)
-      toast.error("Required Fields are empty");
-    else {
-      if (!id) {
-        Axios.post("http://localhost:5000/api/post", {
-          schedule_id,
-          departure_time,
-          arrival_time,
-          duration_time,
+    if (!schedule_id || !departure_time || !arrival_time || !duration_time) {
+      toast.error("Required fields are empty");
+    } else {
+      const scheduleData = {
+        schedule_id,
+        departure_time,
+        arrival_time,
+        duration_time,
+      };
+      const url = id
+        ? `http://localhost:5000/schedule/api/update/${id}`
+        : "http://localhost:5000/schedule/api/add";
+
+      const requestMethod = id ? Axios.put : Axios.post;
+
+      requestMethod(url, scheduleData)
+        .then(() => {
+          setState(initialState);
+          const successMessage = id ? "Schedule updated successfully" : "Schedule added successfully";
+          toast.success(successMessage);
+          history.push("/Schedule");
         })
-          .then((response) => {
-            setState({
-                schedule_id: "",
-                departure_time: "",
-                arrival_time: "",
-                duration_time: "",
-            });
-            if (response.data.err) console.log(response.data.err);
-          })
-          .catch((err) => toast.error(err.response.data));
-        toast.success("Schedule Added Successfully");
-      } else {
-        Axios.put(`http://localhost:5000/schedule/api/update/${id}`, {
-            schedule_id,
-            departure_time,
-            arrival_time,
-            duration_time,
-        })
-          .then((response) => {
-            setState({
-                schedule_id: "",
-                departure_time: "",
-                arrival_time: "",
-                duration_time: "",
-            });
-            if (response.data.err) console.log(response.data.err);
-          })
-          .catch((err) => toast.error(err.response.data));
-        toast.success("Schedule Updated Successfully");
-      }
-      setTimeout(() => history.push("/Schedule"), 500);
+        .catch((error) => toast.error(error.response.data));
     }
   };
 
@@ -73,6 +57,7 @@ const AddEditSchedule = () => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
   };
+
   return (
     <div style={{ marginTop: "100px" }}>
       <form
@@ -90,8 +75,8 @@ const AddEditSchedule = () => {
         <input
           type="text"
           name="schedule_id"
-          value={schedule_id || ""}
-          placeholder="ID"
+          value={schedule_id}
+          placeholder="Schedule ID"
           required
           onChange={handleInputChange}
         />
@@ -100,7 +85,7 @@ const AddEditSchedule = () => {
         <input
           type="text"
           name="departure_time"
-          value={departure_time || ""}
+          value={departure_time}
           placeholder="Departure Time"
           onChange={handleInputChange}
         />
@@ -109,7 +94,7 @@ const AddEditSchedule = () => {
         <input
           type="text"
           name="arrival_time"
-          value={arrival_time || ""}
+          value={arrival_time}
           placeholder="Arrival Time"
           onChange={handleInputChange}
         />
@@ -118,14 +103,14 @@ const AddEditSchedule = () => {
         <input
           type="text"
           name="duration_time"
-          value={duration_time || ""}
+          value={duration_time}
           placeholder="Duration Time"
           onChange={handleInputChange}
         />
 
         <input type="submit" value={id ? "Update" : "Add"} />
         <Link to="/Schedule">
-          <input type="button" value="Back"></input>
+          <button type="button">Back</button>
         </Link>
       </form>
     </div>

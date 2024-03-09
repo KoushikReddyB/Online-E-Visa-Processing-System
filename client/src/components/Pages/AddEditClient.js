@@ -3,99 +3,56 @@ import { useParams, useHistory, Link } from "react-router-dom";
 import "./styles/AddEdit.css";
 import Axios from "axios";
 import { toast } from "react-toastify";
+
 const initialState = {
   client_id: "",
-  fname: "",
-  mname: "",
-  lname: "",
+  first_name: "",
+  middle_name: "",
+  last_name: "",
   phone: "",
   email: "",
   passport: "",
 };
+
 const AddEditClient = () => {
   const [state, setState] = useState(initialState);
-  const { client_id, fname, mname, lname, phone, email, passport } = state;
-
+  const { client_id, first_name, middle_name, last_name, phone, email, passport } = state;
   const history = useHistory();
-
   const { id } = useParams();
 
   useEffect(() => {
-    Axios
-      .get(`http://localhost:5000/api/get/${id}`)
-      .then((resp) => setState({ ...resp.data[0] }));
+    if (id) {
+      Axios.get(`http://localhost:5000/clients/${id}`)
+        .then((response) => setState({ ...response.data }))
+        .catch((error) => console.error(error));
+    }
   }, [id]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (
-      !client_id ||
-      !fname ||
-      !mname ||
-      !lname ||
-      !phone ||
-      !email ||
-      !passport
-    )
-      toast.error("Required Fields are empty");
-    else {
-      if(!id)
-      {
+    if (!client_id || !first_name || !last_name || !phone || !email || !passport) {
+      toast.error("Required fields are empty");
+    } else {
+      const clientData = {
+        client_id,
+        first_name,
+        middle_name,
+        last_name,
+        phone,
+        email,
+        passport,
+      };
+      const url = id ? `http://localhost:5000/clients/update/${id}` : "http://localhost:5000/clients/add";
+      const requestMethod = id ? Axios.put : Axios.post;
 
-        Axios
-          .post("http://localhost:5000/api/post", {
-            client_id,
-            fname,
-            mname,
-            lname,
-            phone,
-            email,
-            passport,
-          })
-          .then((response) => {
-            setState({
-              client_id: "",
-              fname: "",
-              mname: "",
-              lname: "",
-              phone: "",
-              email: "",
-              passport: "",
-            });
-            if(response.data.err)
-            console.log(response.data.err)
-          })
-          .catch((err) => toast.error(err.response.data));
-          toast.success('Client Added Successfully');
-      }
-      else{
-        Axios
-          .put(`http://localhost:5000/api/update/${id}`, {
-            client_id,
-            fname,
-            mname,
-            lname,
-            phone,
-            email,
-            passport,
-          })
-          .then((response) => {
-            setState({
-              client_id: "",
-              fname: "",
-              mname: "",
-              lname: "",
-              phone: "",
-              email: "",
-              passport: "",
-            });
-            if(response.data.err)
-            console.log(response.data.err)
-          })
-          .catch((err) => toast.error(err.response.data));
-          toast.success('Client Updated Successfully');
-      }
-      setTimeout(() => history.push("/Client"), 500);
+      requestMethod(url, clientData)
+        .then(() => {
+          setState(initialState);
+          const successMessage = id ? "Client updated successfully" : "Client added successfully";
+          toast.success(successMessage);
+          history.push("/Client");
+        })
+        .catch((error) => toast.error(error.response.data));
     }
   };
 
@@ -103,6 +60,7 @@ const AddEditClient = () => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
   };
+
   return (
     <div style={{ marginTop: "100px" }}>
       <form
@@ -118,56 +76,71 @@ const AddEditClient = () => {
       >
         <label htmlFor="client-id">Client ID</label>
         <input
-          type="text" name="client_id" value={client_id || ""}
-          placeholder="ID"
-          required
+          type="text"
+          name="client_id"
+          value={client_id}
+          placeholder="Client ID"
           onChange={handleInputChange}
+          required
         />
 
-        <label htmlFor="fname">First Name</label>
+        <label htmlFor="first-name">First Name</label>
         <input
-          type="text" name="fname" value={fname || ""}
+          type="text"
+          name="first_name"
+          value={first_name}
           placeholder="First Name"
           onChange={handleInputChange}
         />
 
-        <label htmlFor="mname">Middle Name</label>
+        <label htmlFor="middle-name">Middle Name</label>
         <input
-          type="text" name="mname" value={mname || ""}
+          type="text"
+          name="middle_name"
+          value={middle_name}
           placeholder="Middle Name"
           onChange={handleInputChange}
         />
 
-        <label htmlFor="lname">Last Name</label>
+        <label htmlFor="last-name">Last Name</label>
         <input
-          type="text" name="lname" value={lname || ""}
+          type="text"
+          name="last_name"
+          value={last_name}
           placeholder="Last Name"
           onChange={handleInputChange}
         />
 
         <label htmlFor="phone">Phone</label>
         <input
-          type="number" name="phone" value={phone || ""}
+          type="tel"
+          name="phone"
+          value={phone}
           placeholder="Phone"
           onChange={handleInputChange}
         />
 
         <label htmlFor="email">Email</label>
         <input
-          type="email" name="email" value={email || ""}
+          type="email"
+          name="email"
+          value={email}
           placeholder="Email"
           onChange={handleInputChange}
         />
 
         <label htmlFor="passport">Passport</label>
         <input
-          type="text" name="passport" value={passport || ""}
+          type="text"
+          name="passport"
+          value={passport}
           placeholder="Passport"
           onChange={handleInputChange}
         />
+
         <input type="submit" value={id ? "Update" : "Add"} />
         <Link to="/Client">
-          <input type="button" value="Back"></input>
+          <button type="button">Back</button>
         </Link>
       </form>
     </div>

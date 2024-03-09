@@ -13,7 +13,7 @@ import Navbar from "./components/Navbar";
 import AddEditClient from "./components/Pages/AddEditClient";
 import ViewClient from './components/Pages/ViewClient'
 import AdminPanel from "./components/Pages/AdminPanel";
-import AddEditAirplane from "./components/Pages/AddEditAirplane";
+import AddEditAirplane from "./components/Pages/AddEditVisa";
 import ViewAirplane from "./components/Pages/ViewAirplane";
 import Airplane from "./components/Pages/Airplane";
 import FlightStatus from "./components/Pages/FlightStatus";
