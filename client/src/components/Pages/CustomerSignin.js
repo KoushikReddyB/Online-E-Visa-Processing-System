@@ -2,29 +2,19 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import "./styles/Signin.css";
 import { useHistory, Link } from "react-router-dom";
-import Swale from "sweetalert2";
+import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+
 const initialState = {
   emailLogin: "",
   passwordLogin: "",
 };
-const initial={
-  id:"",
-}
+
 const Signin = () => {
-  const Swal = withReactContent(Swale);
   const [state, setState] = useState(initialState);
   const { emailLogin, passwordLogin } = state;
-
   const history = useHistory();
-  const loadData = async () => {
-    const response = await Axios.post("http://localhost:5000/getcustomerlogin",{
-      email: emailLogin,
-      password: passwordLogin,
-    });
-    initial.id=response.data[0].client_id
-  };
-  
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
@@ -32,19 +22,25 @@ const Signin = () => {
 
   const Login = (event) => {
     event.preventDefault();
-    loadData();
-    Axios.post("http://localhost:5000/customerlogin", {
+    Axios.post("http://localhost:5000/api/login", {
       email: emailLogin,
       password: passwordLogin,
-    }).then((response) => {
-      if (response.data.msg) {
-        Swal.fire("Invalid Login!", "", "error");
-      } else {
-        Swal.fire("Login Success!", "", "success");
-        setTimeout(()=>history.push(`/CustomerPanel/${initial.id}`),500)
-      }
-    });
+    })
+      .then((response) => {
+        if (response.data.msg) {
+          Swal.fire("Invalid Login!", "", "error");
+        } else {
+          const userId = response.data.user.id;
+          Swal.fire("Login Success!", "", "success");
+          setTimeout(() => history.push(`/dashboard/${userId}`), 500);
+        }
+      })
+      .catch((error) => {
+        console.error("Error logging in: ", error);
+        Swal.fire("An error occurred!", "Please try again later.", "error");
+      });
   };
+
   return (
     <div className="Auth-form-container bg-image">
       <form className="Auth-form" onSubmit={Login}>
@@ -53,20 +49,26 @@ const Signin = () => {
           <div className="form-group mt-3">
             <label>Email</label>
             <input
-              type="email" name="emailLogin" value={emailLogin}
+              type="email"
+              name="emailLogin"
+              value={emailLogin}
               onChange={handleInputChange}
               className="form-control mt-1"
-              placeholder="e.g John@example.com" style={{width:'320px'}}
+              placeholder="e.g John@example.com"
+              style={{ width: "320px" }}
               required
             />
           </div>
           <div className="form-group mt-3">
             <label>Password</label>
             <input
-              type="password" name="passwordLogin" value={passwordLogin}
+              type="password"
+              name="passwordLogin"
+              value={passwordLogin}
               onChange={handleInputChange}
               className="form-control mt-1"
-              placeholder="e.g rXhAz29$%1" style={{width:'320px'}}
+              placeholder="e.g rXhAz29$%1"
+              style={{ width: "320px" }}
               required
             />
           </div>

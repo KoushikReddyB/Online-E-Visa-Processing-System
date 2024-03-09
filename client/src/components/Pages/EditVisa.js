@@ -3,52 +3,47 @@ import { useParams, useHistory, Link } from "react-router-dom";
 import "./styles/AddEdit.css";
 import Axios from "axios";
 import { toast } from "react-toastify";
+
 const initialState = {
-  ticket_id: "",
-  seat_no: "",
-  departure_time: "",
-  gate_no: "",
-  airport_code: "",
+  visa_id: "",
+  country: "",
+  issue_date: "",
+  expiry_date: "",
+  purpose: "",
 };
-const EditTicket = () => {
+
+const EditVisa = () => {
   const [state, setState] = useState(initialState);
-  const { ticket_id, seat_no, departure_time, gate_no, airport_code } = state;
+  const { visa_id, country, issue_date, expiry_date, purpose } = state;
 
   const history = useHistory();
-
   const { id } = useParams();
 
   useEffect(() => {
-    Axios.get(`http://localhost:5000/ticket/api/get/${id}`).then((resp) =>
+    Axios.get(`http://localhost:5000/visa/api/get/${id}`).then((resp) =>
       setState({ ...resp.data[0] })
     );
   }, [id]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!ticket_id || !seat_no || !departure_time || !gate_no || !airport_code)
+    if (!visa_id || !country || !issue_date || !expiry_date || !purpose)
       toast.error("Required Fields are empty");
     else {
-      Axios.put(`http://localhost:5000/ticket/api/update/${id}`, {
-        ticket_id,
-        seat_no,
-        departure_time,
-        gate_no,
-        airport_code,
+      Axios.put(`http://localhost:5000/visa/api/update/${id}`, {
+        visa_id,
+        country,
+        issue_date,
+        expiry_date,
+        purpose,
       })
         .then((response) => {
-          setState({
-            ticket_id: "",
-            seat_no: "",
-            departure_time: "",
-            gate_no: "",
-            airport_code: "",
-          });
+          setState(initialState);
           if (response.data.err) console.log(response.data.err);
         })
         .catch((err) => toast.error(err.response.data));
-      toast.success("Ticket Updated Successfully");
-      setTimeout(() => history.push("/Ticket"), 500);
+      toast.success("Visa Updated Successfully");
+      setTimeout(() => history.push("/Visa"), 500);
     }
   };
 
@@ -56,6 +51,7 @@ const EditTicket = () => {
     const { name, value } = event.target;
     setState({ ...state, [name]: value });
   };
+
   return (
     <div style={{ marginTop: "100px" }}>
       <form
@@ -69,58 +65,58 @@ const EditTicket = () => {
         }}
         onSubmit={handleSubmit}
       >
-        <label htmlFor="ticket-id">Ticket ID</label>
+        <label htmlFor="visa-id">Visa ID</label>
         <input
           type="text"
-          name="ticket_id"
-          value={ticket_id || ""}
+          name="visa_id"
+          value={visa_id || ""}
           placeholder="ID"
           required
           onChange={handleInputChange}
         />
 
-        <label htmlFor="seat-no">Seat No</label>
+        <label htmlFor="country">Country</label>
         <input
           type="text"
-          name="seat_no"
-          value={seat_no || ""}
-          placeholder="Seat No"
+          name="country"
+          value={country || ""}
+          placeholder="Country"
           onChange={handleInputChange}
         />
 
-        <label htmlFor="departure-time">Departure Time</label>
+        <label htmlFor="issue-date">Issue Date</label>
         <input
           type="text"
-          name="departure_time"
-          value={departure_time || ""}
-          placeholder="Departure Time"
+          name="issue_date"
+          value={issue_date || ""}
+          placeholder="Issue Date"
           onChange={handleInputChange}
         />
 
-        <label htmlFor="gate-no">Gate No</label>
+        <label htmlFor="expiry-date">Expiry Date</label>
         <input
           type="text"
-          name="gate_no"
-          value={gate_no || ""}
-          placeholder="Gate No"
+          name="expiry_date"
+          value={expiry_date || ""}
+          placeholder="Expiry Date"
           onChange={handleInputChange}
         />
 
-        <label htmlFor="airport-code">Airport Code</label>
+        <label htmlFor="purpose">Purpose</label>
         <input
           type="text"
-          name="airport_code"
-          value={airport_code || ""}
-          placeholder="Airport Code"
+          name="purpose"
+          value={purpose || ""}
+          placeholder="Purpose"
           onChange={handleInputChange}
         />
-        <input type="submit" value={"Update"} />
-        <Link to="/Ticket">
-          <input type="button" value="Back"></input>
+        <input type="submit" value="Update" />
+        <Link to="/Visa">
+          <input type="button" value="Back" />
         </Link>
       </form>
     </div>
   );
 };
 
-export default EditTicket;
+export default EditVisa;

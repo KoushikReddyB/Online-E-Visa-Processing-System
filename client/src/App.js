@@ -8,41 +8,34 @@ import Contact from "./components/Pages/Contact"
 import About from './components/Pages/About'
 import Signin from './components/Pages/Signin'
 import Signup from "./components/Pages/Signup";
-import Client from "./components/Pages/Client";
+import Client from "./components/Pages/VisaApplicants";
 import Navbar from "./components/Navbar";
 import AddEditClient from "./components/Pages/AddEditClient";
 import ViewClient from './components/Pages/ViewClient'
 import AdminPanel from "./components/Pages/AdminPanel";
 import AddEditAirplane from "./components/Pages/AddEditVisa";
-import ViewAirplane from "./components/Pages/ViewAirplane";
-import Airplane from "./components/Pages/Airplane";
-import FlightStatus from "./components/Pages/FlightStatus";
-import ViewFlightStatus from "./components/Pages/ViewFlightStatus";
-import Gates from "./components/Pages/Gates";
-import ViewGates from "./components/Pages/ViewGates";
-import Airport from "./components/Pages/Airport";
-import ViewAirport from "./components/Pages/ViewAirport";
-import Reviews from "./components/Pages/Reviews";
+import ViewAirplane from "./components/Pages/ViewVisa";
+import Airplane from "./components/Pages/Visa";
+import FlightStatus from "./components/Pages/VisaStatus";
+import ViewFlightStatus from "./components/Pages/ViewVisaStatus";
+import Airport from "./components/Pages/VisaOffice";
+import ViewAirport from "./components/Pages/ViewVisaOffice";
 import ViewReviews from "./components/Pages/ViewReviews";
 import Schedule from "./components/Pages/Schedule";
 import AddEditSchedule from "./components/Pages/AddEditSchedule";
 import ViewSchedule from "./components/Pages/ViewSchedule";
-import AddFlight from "./components/Pages/AddFlight";
+import AddFlight from "./components/Pages/AddVisa";
 import Flight from "./components/Pages/Flight";
-import ViewFlight from "./components/Pages/ViewFlight";
-import Ticket from "./components/Pages/Ticket";
-import EditTicket from "./components/Pages/EditTicket";
-import ViewTicket from "./components/Pages/ViewTicket";
-import BookTicket from "./components/Pages/BookTicket";
-import AvailableFlights from "./components/Pages/AvailableFlights";
+import BookTicket from "./components/Pages/VisaApplicationForm";
+import AvailableFlights from "./components/Pages/AvailableVisas";
 import CustomerSignin from "./components/Pages/CustomerSignin";
 import CustomerPanel from "./components/Pages/CustomerPanel";
-import ViewProfile from "./components/Pages/ViewProfile";
-import BoardingPass from "./components/Pages/BoardingPass";
+import ViewProfile from "./components/Pages/ViewVisaProfile";
+import BoardingPass from "./components/Pages/VisaConfirmation";
 import Invoice from "./components/Pages/Invoice";
 import AddReviews from "./components/Pages/AddReviews";
-import ViewCustomerTickets from "./components/Pages/ViewCustomerTickets";
-import Booking from "./components/Pages/Booking";
+import ViewCustomerTickets from "./components/Pages/ViewCustomerVisas";
+import Booking from "./components/Pages/VisaApplication";
 function App() {
   return (
     <BrowserRouter>
@@ -62,11 +55,8 @@ function App() {
           <Route path='/ViewAirplane/:id' component={ViewAirplane}/>
           <Route path='/FlightStatus' component={FlightStatus}/>
           <Route path='/ViewFlightStatus/:id' component={ViewFlightStatus}/>
-          <Route path='/Gates' component={Gates}/>
-          <Route path='/ViewGates/:id' component={ViewGates}/>
           <Route path='/Airport' component={Airport}/>
           <Route path='/ViewAirport/:id' component={ViewAirport}/>
-          <Route path='/Reviews' component={Reviews}/>
           <Route path='/ViewReviews/:id' component={ViewReviews}/>
           <Route path='/Schedule' component={Schedule}/>
           <Route path='/AddEditSchedule' component={AddEditSchedule}/>
@@ -74,10 +64,6 @@ function App() {
           <Route path='/ViewSchedule/:id' component={ViewSchedule}/>
           <Route path='/Flight' component={Flight}/>
           <Route path='/AddFlight' component={AddFlight}/>
-          <Route path='/ViewFlight/:id' component={ViewFlight}/>
-          <Route path='/Ticket' component={Ticket}/>
-          <Route path='/EditTicket' component={EditTicket}/>
-          <Route path='/ViewTicket/:id' component={ViewTicket}/>
           <Route path='/CustomerSignin' component={CustomerSignin}/>
           <Route path='/CustomerPanel/:id' component={CustomerPanel}/>
           <Route path='/ViewProfile/:id' component={ViewProfile}/>

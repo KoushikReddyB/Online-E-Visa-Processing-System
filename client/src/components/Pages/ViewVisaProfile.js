@@ -12,21 +12,24 @@ import {
 } from "mdb-react-ui-kit";
 import './styles/CustomerPanel.css'
 import { useParams, Link } from "react-router-dom";
-const ViewProfile = () => {
+
+const ViewVisaProfile = () => {
   const { id } = useParams();
-  const [data, setData] = useState({});
+  const [visaData, setVisaData] = useState({});
+
   useEffect(() => {
-    Axios.get(`http://localhost:5000/api/get/${id}`).then((resp) =>
-      setData({ ...resp.data[0] })
-    );
+    Axios.get(`http://localhost:5000/visa/api/get/${id}`)
+      .then((resp) => setVisaData({ ...resp.data[0] }))
+      .catch((error) => console.error('Error fetching visa profile:', error));
   }, []);
+
   return (
     <div className="vh-100 bg-pic">
-      <MDBContainer  style={{margin:'0',marginLeft:'28%'}}>
+      <MDBContainer  style={{ margin: '0', marginLeft: '28%' }}>
         <MDBRow className="justify-content-center">
           <MDBCol md="9" lg="7" xl="6" className="mt-8">
             <MDBCard
-              style={{ borderRadius: "15px", width: "800px", marginTop: "50%",height:'350px'}}
+              style={{ borderRadius: "15px", width: "800px", marginTop: "50%", height: '350px' }}
             >
               <MDBCardBody className="p-4">
                 <div className="d-flex text-black">
@@ -44,21 +47,20 @@ const ViewProfile = () => {
                   </div>
                   <div className="flex-grow-1 ms-5">
                     <div>
-                      <MDBCardTitle>First Name: {data.fname}</MDBCardTitle>
-                      <MDBCardTitle>Middle Name: {data.mname} </MDBCardTitle>
-                      <MDBCardTitle>Last Name: {data.lname}</MDBCardTitle>
+                      <MDBCardTitle>Visa Type: {visaData.visa_type}</MDBCardTitle>
+                      <MDBCardTitle>Country: {visaData.country} </MDBCardTitle>
+                      <MDBCardTitle>Expiration Date: {visaData.expiration_date}</MDBCardTitle>
                     </div>
                     <div style={{ display: "inline-block" }}>
-                      <MDBCardTitle>Phone: {data.phone}</MDBCardTitle>
-                      <MDBCardTitle>Email: {data.email}</MDBCardTitle>
-                      <MDBCardTitle>Passport: {data.passport}</MDBCardTitle>
+                      <MDBCardTitle>Issue Date: {visaData.issue_date}</MDBCardTitle>
+                      <MDBCardTitle>Status: {visaData.status}</MDBCardTitle>
                     </div>
 
                     <div className="d-flex pt-1">
                       <Link to={`/CustomerPanel/${id}`}>
                         <button
                           className="flex-grow-0 btn "
-                          style={{ fontSize: "20px", backgroundColor:'blue',color:'white'}}
+                          style={{ fontSize: "20px", backgroundColor: 'blue', color: 'white' }}
                         >
                           Back to Main
                         </button>
@@ -75,4 +77,4 @@ const ViewProfile = () => {
   );
 };
 
-export default ViewProfile;
+export default ViewVisaProfile;
