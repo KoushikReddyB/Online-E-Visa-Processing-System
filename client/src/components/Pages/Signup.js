@@ -157,7 +157,7 @@ class Signup extends Component {
                 style={{ width: "320px" }}
               />
             </div>
-            {/* End of additional form fields */}
+            {/*  End of additional form fields  */}
             <div className="form-group mt-3">
               <label>Phone</label>
               <input
